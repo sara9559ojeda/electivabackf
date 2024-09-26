@@ -8,5 +8,6 @@ class publicacion_serializer(serializers.ModelSerializer):
         fields=[
             'titulo',
             'descripcion',
-            'multimedia'
+            'multimedia',
+            'fecha'
         ]
