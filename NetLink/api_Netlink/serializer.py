@@ -6,8 +6,9 @@ class publicacion_serializer(serializers.ModelSerializer):
     class Meta:
         model=publicacion
         fields=[
+            'id',
             'titulo',
             'descripcion',
-            'multimedia',
-            'fecha'
+            'multimedia'
+            #'fecha'
         ]
