@@ -25,4 +25,13 @@ class PublicacionView(APIView):
                 serializador.save()
                 return Response(serializador.data, status=status.HTTP_201_CREATED)
             return Response(serializador.data, status=status.HTTP_400_BAD_REQUEST)
-    ##seguir con metodo put
+    def put(self, request, pkid):
+        mi_publicacion=publicacion.objects.filter(id=pkid).update(
+            titulo=request.data.get('titulo'),
+            descripcion=request.data.get('descripcion'),
+            multimedia=request.data.get('multimedia'),
+        )
+        return Response(mi_publicacion, status=status.HTTP_200_OK)
+    def delete(self, request, pkid):
+        mi_publicacion=publicacion.objects.filter(id=pkid).delete()
+        return Response(mi_publicacion, status=status.HTTP_204_NO_CONTENT)
