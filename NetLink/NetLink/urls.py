@@ -21,5 +21,4 @@ from api_Netlink import urls as publicacion_url
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/publicacion/', include(publicacion_url))
-    
 ]

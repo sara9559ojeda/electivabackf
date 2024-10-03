@@ -9,6 +9,5 @@ class publicacion_serializer(serializers.ModelSerializer):
             'id',
             'titulo',
             'descripcion',
-            'multimedia'
-            #'fecha'
+            'multimedia',
         ]
