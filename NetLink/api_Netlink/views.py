@@ -3,7 +3,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status,permissions
-from api_feed.models import publicacion
+from api_Netlink.models import publicacion
 from .serializer import publicacion_serializer
 from django.shortcuts import render
 
