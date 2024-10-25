@@ -1,4 +1,4 @@
-from Cuentas.models import Experience, laboralInformation
+from Cuentas.models import Experience, laboralInformation, AcademicInformation
 from rest_framework import serializers
 
 class experienceSerializer(serializers.ModelSerializer):
@@ -29,3 +29,7 @@ class laboralInformationSerializer(serializers.ModelSerializer):
         
         return laboral_info
     
+class academicInformationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AcademicInformation
+        fields =('id', 'educativeInstitution', 'title','academicDiscipline','startDate', 'endDate','aditionalActivities', 'description','abilities')

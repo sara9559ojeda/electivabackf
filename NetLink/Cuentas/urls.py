@@ -1,9 +1,11 @@
 from django.urls import path
-from .views import laboralInformationApiView
+from .views import laboralInformationApiView, academicInformationApiView
 
 urlpatterns=[
-    path('list', laboralInformationApiView.as_view()),
+    path('Llist', laboralInformationApiView.as_view()),
+    path('getLinfo', laboralInformationApiView.as_view()),
     path('laboralInfoAdd', laboralInformationApiView.as_view()),
-    path('addPreviousExperiences', laboralInformationApiView.as_view()),
-    path('addAbility', laboralInformationApiView.as_view())
+    path('addPreviousExperiences/<int:pkid>', laboralInformationApiView.as_view()),
+    path('addAbility/<int:pkid>', laboralInformationApiView.as_view()),
+    path('laboralInfoDelete/<int:pkid>', laboralInformationApiView.as_view()),
 ]

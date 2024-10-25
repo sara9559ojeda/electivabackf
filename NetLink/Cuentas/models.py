@@ -78,4 +78,63 @@ class laboralInformation(models.Model):
     def addAbility(self, ability):
         self.abilities.append(ability)
         return self.abilities
-        
+
+class AcademicInformation(models.Model):
+    educativeInstitution = models.CharField(max_length=30)
+    title = models.CharField(max_length=30)
+    academicDiscipline = models.CharField(max_length=30)
+    startDate = models.DateField(max_length=10)
+    endDate = models.DateField(max_length=10)
+    aditionalActivities = ArrayField(models.CharField(max_length=100), blank=True)
+    description = models.CharField(max_length=30)
+    abilities= ArrayField(models.CharField(max_length=100), blank=True)
+    
+    def getEducativeInstitution(self):
+        return self.educativeInstitution
+    
+    def setEducativeInstitution(self, educativeInstitution):
+        self.educativeInstitution = educativeInstitution
+    
+    def getTitle(self):
+        return self.title
+    
+    def setTitle(self, title):
+        self.title = title
+    
+    def getAcademicDiscipline(self):
+        return self.academicDiscipline
+    
+    def setAcademicDiscipline(self, academicDiscipline):
+        self.academicDiscipline = academicDiscipline
+    
+    def getStartDate(self):
+        return self.startDate
+    
+    def setStartDate(self, startDate):
+        self.startDate = startDate
+    
+    def getEndDate(self):
+        return self.endDate
+    
+    def setEndDate(self, endDate):
+        self.endDate = endDate
+    
+    def getAbilities(self):
+        return self.abilities
+    
+    def getDescription(self):
+        return self.description
+    
+    def setDescription(self, description):
+        self.description = description
+    
+    def getAditionalActivities(self):
+        return self.aditionalActivities
+    
+    def addAditionalActivity(self, activity):
+        self.aditionalActivities.append(activity)
+        return self.aditionalActivities
+    
+    def addAbility(self, ability):
+        self.abilities.append(ability)
+        return self.abilities
