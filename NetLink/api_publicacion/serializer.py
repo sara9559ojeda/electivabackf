@@ -1,4 +1,4 @@
-from api_Netlink.models import publicacion
+from api_publicacion.models import publicacion
 from rest_framework import serializers
 
 #Serializer publicacion para feed de publicaciones

@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-from api_Netlink import urls as publicacion_url
+from api_publicacion import urls as publicacion_url
 
 urlpatterns = [
     path('admin/', admin.site.urls),

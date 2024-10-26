@@ -3,7 +3,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status,permissions
-from api_Netlink.models import publicacion
+from api_publicacion.models import publicacion
 from .serializer import publicacion_serializer
 from django.shortcuts import render
 
@@ -14,10 +14,7 @@ class PublicacionView(APIView):
             lista_publicaciones=publicacion.objects.all()
             serializer_publicaciones=publicacion_serializer(lista_publicaciones, many=True)
             return Response(serializer_publicaciones.data,status=status.HTTP_200_OK)
-    # def get(self, request, *args, pkid):
-    #     publicaciones_detail=publicacion.objects.filter(id=pkid)
-    #     serializer_publicaciones=publicacion_serializer(publicaciones_detail, many=True)
-    #     return Response(serializer_publicaciones.data,status=status.HTTP_200_OK)
+
     def post(self, resquest, *args, **kwargs):
             data={
                 'titulo':resquest.data.get('titulo'),
