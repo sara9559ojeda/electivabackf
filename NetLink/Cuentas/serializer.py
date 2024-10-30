@@ -1,4 +1,4 @@
-from Cuentas.models import Experience, laboralInformation, AcademicInformation
+from Cuentas.models import Experience, laboralInformation, AcademicInformation, Usuario
 from rest_framework import serializers
 
 class experienceSerializer(serializers.ModelSerializer):
@@ -33,3 +33,15 @@ class academicInformationSerializer(serializers.ModelSerializer):
     class Meta:
         model = AcademicInformation
         fields =('id', 'educativeInstitution', 'title','academicDiscipline','startDate', 'endDate','aditionalActivities', 'description','abilities')
+
+class usuario_serializer(serializers.ModelSerializer):
+    class Meta:
+        model=Usuario
+        fields=[
+            'id',
+            'nombre',
+            'contraseña',
+            'fechaNacimiento',
+            'email',
+            'paisOrigen'
+        ]

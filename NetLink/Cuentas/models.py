@@ -138,3 +138,43 @@ class AcademicInformation(models.Model):
     def addAbility(self, ability):
         self.abilities.append(ability)
         return self.abilities
+
+
+
+class Usuario(models.Model):
+    nombre=models.CharField(max_length=200)
+    contrasena=models.CharField(max_length=30)
+    fechaNacimiento=models.CharField(max_length=20)
+    email=models.CharField(max_length=100)
+    paisOrigen=models.CharField(max_length=30)
+
+
+    def setNombre(self, nombre):
+        self.nombre = nombre
+    
+    def getAbilities(self):
+        return self.nombre
+    
+    def setContrasena(self, contrasena):
+        self.contrasena = contrasena
+    
+    def getContrasena(self):
+        return self.contrasena 
+    
+    def setFechaNacimiento(self, fechaNacimiento):
+        self.fechaNacimiento = fechaNacimiento
+    
+    def getFechaNacimiento(self):
+        return self.fechaNacimiento
+    
+    def setEmail(self, email):
+        self.email = email
+    
+    def getEmail(self):
+        return self.email
+    
+    def setPaisOrigen(self, paisOrigen):
+        self.paisOrigen = paisOrigen
+    
+    def getPaisOrigen(self):
+        return self.paisOrigen
