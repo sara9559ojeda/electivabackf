@@ -17,8 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from Cuentas import urls as Netlink_url
+from api_publicacion import urls as publicacion_url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/Netlink/', include(Netlink_url))
+    path('api/Netlink/', include(Netlink_url)),
+    path('api/publicacion/', include(publicacion_url))
 ]
+
