@@ -22,3 +22,4 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/Netlink/', include(Netlink_url))
 ]
+
