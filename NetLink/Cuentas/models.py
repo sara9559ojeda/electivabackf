@@ -144,7 +144,7 @@ class AcademicInformation(models.Model):
 class Usuario(models.Model):
     nombre=models.CharField(max_length=200)
     contrasena=models.CharField(max_length=30)
-    fechaNacimiento=models.CharField(max_length=20)
+    fechaNacimiento=models.DateField()
     email=models.CharField(max_length=100)
     paisOrigen=models.CharField(max_length=30)
 
