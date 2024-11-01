@@ -182,7 +182,7 @@ class UsuariosView(APIView):
     def post(self, request, *args, **kwargs):
         data = {
             'nombre': request.data.get('nombre'),
-            'contraseña': request.data.get('contraseña'),
+            'contrasena': request.data.get('contrasena'),
             'fechaNacimiento': request.data.get('fechaNacimiento'),
             'email': request.data.get('email'),
             'paisOrigen': request.data.get('paisOrigen')       
@@ -205,7 +205,7 @@ class UsuariosView(APIView):
     # Intenta actualizar el usuario y guarda la cantidad de registros afectados
         registros_actualizados = Usuario.objects.filter(id=pkid).update(
             nombre=request.data.get('nombre'),
-            contraseña=request.data.get('contraseña'),
+            contrasena=request.data.get('contrasena'),
             fechaNacimiento=request.data.get('fechaNacimiento'),
             email=request.data.get('email'),
             paisOrigen=request.data.get('paisOrigen')

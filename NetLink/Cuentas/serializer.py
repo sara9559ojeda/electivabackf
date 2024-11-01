@@ -40,7 +40,7 @@ class usuario_serializer(serializers.ModelSerializer):
         fields=[
             'id',
             'nombre',
-            'contraseña',
+            'contrasena',
             'fechaNacimiento',
             'email',
             'paisOrigen'
