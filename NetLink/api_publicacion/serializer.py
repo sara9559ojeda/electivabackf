@@ -1,13 +1,12 @@
-from api_publicacion.models import publicacion
 from rest_framework import serializers
+from api_publicacion.models import publicacion
 
-#Serializer publicacion para feed de publicaciones
 class publicacion_serializer(serializers.ModelSerializer):
     class Meta:
-        model=publicacion
-        fields=[
-            'id',
-            'titulo',
-            'descripcion',
-            'multimedia',
-        ]
+        model = publicacion
+        fields = ['id', 'titulo', 'descripcion', 'multimedia', 'date_created']
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['date_created'] = instance.date_created.strftime('%Y-%m-%d %H:%M:%S')
+        return data

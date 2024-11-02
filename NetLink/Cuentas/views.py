@@ -6,7 +6,7 @@ from rest_framework import status,permissions
 from Cuentas.models import laboralInformation
 from django.db import models
 from Cuentas.models import Experience, AcademicInformation, Usuario
-from Cuentas.serializer import laboralInformationSerializer, academicInformationSerializer, usuario_serializer
+from Cuentas.serializer import laboralInformationSerializer, academicInformationSerializer, experienceSerializer, usuario_serializer
 
 class laboralInformationApiView(APIView):
     def get(self, request, *args, **kwargs):
@@ -20,15 +20,19 @@ class laboralInformationApiView(APIView):
         return Response(laboralSerializer.data, status=status.HTTP_200_OK)
     
     def post(self, request, *args, **kwargs):
-        new_experience = Experience.objects.create(
-            company=request.data.get('company'),
-            position=request.data.get('position'),
-            description=request.data.get('description')
-        )
+        previousExperiences = []
+        
+        for i in request.data.get('previousExperiences'):
+            experience = Experience.objects.create(company=i['company'],
+                position= i['position'],
+                description= i['description'])
+
+            previousExperiences.append(experience.pk)
         
         data = {
             'latestPosition':request.data.get('latestPosition'),
             'abilities': request.data.get('abilities'),
+            'previousExperiences': previousExperiences,
             'lookingForEmployement': request.data.get('lookingForEmployement'),
             'desiredPosition': request.data.get('desiredPosition'),
             'desiredCountry': request.data.get('desiredCountry'),
@@ -39,7 +43,6 @@ class laboralInformationApiView(APIView):
         
         if serializer.is_valid():
             laboral_info = serializer.save()
-            laboral_info.previousExperiences.add(new_experience)
             laboral_info.save()
             
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -95,6 +98,57 @@ class laboralInformationApiView(APIView):
             return Response({"message": "Información laboral eliminada exitosamente."}, status=status.HTTP_200_OK)
         
         except laboralInformation.DoesNotExist:
+            return Response({"error": "Información laboral no encontrada."}, status=status.HTTP_404_NOT_FOUND)
+
+class experienceApiView(APIView):
+    def get(self, request, *args, **kwargs):
+        eList = Experience.objects.all()
+        eSerializer = experienceSerializer(eList, many=True)
+        return Response(eSerializer.data, status=status.HTTP_200_OK)
+    
+    def getExperience(self, request, id, *args, **kwargs):
+        miExperience = Experience.objects.filter(id = id).first()
+        eSerializer = experienceSerializer(miExperience, many=True)
+        return Response(eSerializer.data, status=status.HTTP_200_OK)
+    
+    def post(self, request, *args, **kwargs):
+        
+        data = {
+            'company':request.data.get('company'),
+            'position': request.data.get('position'),
+            'description': request.data.get('description')
+        }
+        
+        serializer = experienceSerializer(data=data)
+        
+        if serializer.is_valid():
+            experience = serializer.save()
+            experience.save()
+            
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def put(self, request, pkid):
+        try:
+            experience = Experience.objects.get(id=pkid)
+        except Experience.DoesNotExist:
+            return Response({"error": "Información laboral no encontrada."}, status=status.HTTP_404_NOT_FOUND)
+        
+        experience.save()
+
+        serializer = experienceSerializer(experience)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def delete(self, request, pkid):
+        try:
+            experience = Experience.objects.get(id=pkid)
+            
+            experience.delete()
+            
+            return Response({"message": "Información laboral eliminada exitosamente."}, status=status.HTTP_200_OK)
+        
+        except Experience.DoesNotExist:
             return Response({"error": "Información laboral no encontrada."}, status=status.HTTP_404_NOT_FOUND)
 
 class academicInformationApiView(APIView):

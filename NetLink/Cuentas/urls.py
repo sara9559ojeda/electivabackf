@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import laboralInformationApiView, academicInformationApiView, UsuariosView, UsuarioQueryApiView
+from .views import laboralInformationApiView, academicInformationApiView, experienceApiView, UsuariosView, UsuarioQueryApiView
 
 urlpatterns=[
     path('Llist', laboralInformationApiView.as_view()),
@@ -8,6 +8,12 @@ urlpatterns=[
     path('addPreviousExperiences/<int:pkid>', laboralInformationApiView.as_view()),
     path('addAbility/<int:pkid>', laboralInformationApiView.as_view()),
     path('laboralInfoDelete/<int:pkid>', laboralInformationApiView.as_view()),
+    path('getExperiences', experienceApiView.as_view()),
+    path('getExperience', experienceApiView.as_view()),
+    path('getExperiences', experienceApiView.as_view()),
+    path('addExperience', experienceApiView.as_view()),
+    path('updateExperience/<int:pkid>', experienceApiView.as_view()),
+    path('deleteExperience/<int:pkid>', experienceApiView.as_view()),
 
     path('list', UsuariosView.as_view()),
     path('crear-usuario', UsuariosView.as_view()),
