@@ -15,11 +15,11 @@ class PublicacionView(APIView):
             serializer_publicaciones=publicacion_serializer(lista_publicaciones, many=True)
             return Response(serializer_publicaciones.data,status=status.HTTP_200_OK)
 
-    def post(self, resquest, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
             data={
-                'titulo':resquest.data.get('titulo'),
-                'descripcion':resquest.data.get('descripcion'),
-                'multimedia':resquest.data.get('multimedia'),
+                'titulo':request.data.get('titulo'),
+                'descripcion':request.data.get('descripcion'),
+                'multimedia':request.data.get('multimedia'),
             }
             serializador=publicacion_serializer(data=data)
             if serializador.is_valid():
