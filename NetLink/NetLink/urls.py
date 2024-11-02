@@ -15,11 +15,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path,include
+from api_publicacion import urls as publicacion_url
 from Cuentas import urls as Netlink_url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/publicacion/', include(publicacion_url)),
     path('api/Netlink/', include(Netlink_url))
 ]
 
