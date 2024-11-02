@@ -1,7 +1,9 @@
 from django.urls import path
-from .views import laboralInformationApiView, academicInformationApiView, experienceApiView, UsuariosView, UsuarioQueryApiView
+from .views import laboralInformationApiView, academicInformationApiView, experienceApiView, UsuariosView, UsuarioQueryApiView, validateApiView
 
 urlpatterns=[
+    path('login', validateApiView.as_view()),
+
     path('Llist', laboralInformationApiView.as_view()),
     path('getLinfo', laboralInformationApiView.as_view()),
     path('laboralInfoAdd', laboralInformationApiView.as_view()),
