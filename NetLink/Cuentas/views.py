@@ -297,6 +297,6 @@ class validateApiView(APIView):
             'email':request.data.get('email'),
             'contrasena':request.data.get('contrasena'),
         }
-        if login.objects.filter(email=data['email'], contrasena=data['contrasena']).exists():
+        if Usuario.objects.filter(email=data['email'], contrasena=data['contrasena']).exists():
             return Response(True, status=status.HTTP_200_OK) #ver perfil
         return Response(False, status=status.HTTP_400_BAD_REQUEST)
