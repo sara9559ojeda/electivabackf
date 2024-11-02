@@ -291,3 +291,12 @@ class UsuarioQueryApiView(APIView):
         serializer_usuario = usuario_serializer(miUsuario)
         return Response(serializer_usuario.data, status=status.HTTP_200_OK)
 
+class validateApiView(APIView):
+    def post(self, request, *args, **kwargs):
+        data={
+            'email':request.data.get('email'),
+            'contrasena':request.data.get('contrasena'),
+        }
+        if Usuario.objects.filter(email=data['email'], contrasena=data['contrasena']).exists():
+            return Response(True, status=status.HTTP_200_OK) #ver perfil
+        return Response(False, status=status.HTTP_400_BAD_REQUEST)
