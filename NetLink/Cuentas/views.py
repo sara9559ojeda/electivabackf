@@ -8,6 +8,62 @@ from django.db import models
 from Cuentas.models import Experience, AcademicInformation, Usuario
 from Cuentas.serializer import laboralInformationSerializer, academicInformationSerializer, experienceSerializer, usuario_serializer
 
+class experienceApiView(APIView):
+    def get(self, request, *args, **kwargs):
+        eList = Experience.objects.all()
+        eSerializer = experienceSerializer(eList, many=True)
+        return Response(eSerializer.data, status=status.HTTP_200_OK)
+    
+    def getExperience(self, request, id, *args, **kwargs):
+        miExperience = Experience.objects.filter(id = id).first()
+        eSerializer = experienceSerializer(miExperience, many=True)
+        return Response(eSerializer.data, status=status.HTTP_200_OK)
+    
+    def post(self, request, *args, **kwargs):
+        
+        data = {
+            'company':request.data.get('company'),
+            'position': request.data.get('position'),
+            'description': request.data.get('description')
+        }
+        
+        serializer = experienceSerializer(data=data)
+        
+        if serializer.is_valid():
+            experience = serializer.save()
+            experience.save()
+            
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def put(self, request, pkid, *args, **kwargs):
+        try:
+            experience = Experience.objects.get(id=pkid)
+        except Experience.DoesNotExist:
+            return Response({'error': 'Vehículo no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = experienceSerializer(experience, data=request.data, partial=True) 
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pkid):
+        try:
+            experience = Experience.objects.get(id=pkid)
+            
+            experience.delete()
+            
+            return Response({"message": "Información laboral eliminada exitosamente."}, status=status.HTTP_200_OK)
+        
+        except Experience.DoesNotExist:
+            return Response({"error": "Información laboral no encontrada."}, status=status.HTTP_404_NOT_FOUND)
+
+
 class laboralInformationApiView(APIView):
     def get(self, request, *args, **kwargs):
         laboralList = laboralInformation.objects.all()
@@ -40,13 +96,55 @@ class laboralInformationApiView(APIView):
         }
         
         serializer = laboralInformationSerializer(data=data)
-        
+        print(request.data)
         if serializer.is_valid():
             laboral_info = serializer.save()
             laboral_info.save()
-            
+            print(serializer.data)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def put(self, request, pkid, *args, **kwargs):
+        try:
+            laboral = laboralInformation.objects.get(id=pkid)
+        except laboralInformation.DoesNotExist:
+            return Response({'error': 'Informacion no encontrada.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        previousExperiences = []
+        abilities = laboral.abilities
+        
+        for i in laboral.previousExperiences.values_list():
+            previousExperiences.append(i[0])
+        
+        
+        for i in request.data.get('abilities'):
+            abilities.append(i)
+        
+        for i in request.data.get('previousExperiences'):
+            experience = Experience.objects.create(company=i['company'],
+                position= i['position'],
+                description= i['description'])
+
+            previousExperiences.append(experience.pk)
+        
+        data = {
+            'latestPosition':request.data.get('latestPosition'),
+            'abilities': abilities,
+            'previousExperiences': previousExperiences,
+            'lookingForEmployement': request.data.get('lookingForEmployement'),
+            'desiredPosition': request.data.get('desiredPosition'),
+            'desiredCountry': request.data.get('desiredCountry'),
+            'telecommuting': request.data.get('telecommuting')
+        }
+                
+        serializer = laboralInformationSerializer(laboral,data=data, partial=True) 
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        print(request.data)
+        print(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def delete(self, request, pkid):
@@ -60,45 +158,6 @@ class laboralInformationApiView(APIView):
         except laboralInformation.DoesNotExist:
             return Response({"error": "Información laboral no encontrada."}, status=status.HTTP_404_NOT_FOUND)
 
-class experienceApiView(APIView):
-    def get(self, request, *args, **kwargs):
-        eList = Experience.objects.all()
-        eSerializer = experienceSerializer(eList, many=True)
-        return Response(eSerializer.data, status=status.HTTP_200_OK)
-    
-    def getExperience(self, request, id, *args, **kwargs):
-        miExperience = Experience.objects.filter(id = id).first()
-        eSerializer = experienceSerializer(miExperience, many=True)
-        return Response(eSerializer.data, status=status.HTTP_200_OK)
-    
-    def post(self, request, *args, **kwargs):
-        
-        data = {
-            'company':request.data.get('company'),
-            'position': request.data.get('position'),
-            'description': request.data.get('description')
-        }
-        
-        serializer = experienceSerializer(data=data)
-        
-        if serializer.is_valid():
-            experience = serializer.save()
-            experience.save()
-            
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    def delete(self, request, pkid):
-        try:
-            experience = Experience.objects.get(id=pkid)
-            
-            experience.delete()
-            
-            return Response({"message": "Información laboral eliminada exitosamente."}, status=status.HTTP_200_OK)
-        
-        except Experience.DoesNotExist:
-            return Response({"error": "Información laboral no encontrada."}, status=status.HTTP_404_NOT_FOUND)
 
 class academicInformationApiView(APIView):
     def get(self, request, *args, **kwargs):
@@ -216,122 +275,3 @@ class validateApiView(APIView):
         if Usuario.objects.filter(email=data['email'], contrasena=data['contrasena']).exists():
             return Response(True, status=status.HTTP_200_OK) #ver perfil
         return Response(False, status=status.HTTP_400_BAD_REQUEST)
-
-class LaboralInfoUpdateApiView(APIView):
-
-    def put(self, request, pkid):
-        laboral= laboralInformation.objects.filter(id=pkid).update(
-            lookingForEmployement=request.data.get('lookingForEmployement'),
-            desiredPosition=request.data.get('desiredPosition'),
-            desiredCountry=request.data.get('desiredCountry'),
-
-        )
-        return Response(academic, status=status.HTTP_200_OK)
-
-class ExpLaboralAPiView(APIView):
-    def put(self, request, pkid):
-        try:
-            experience = Experience.objects.get(id=pkid)
-        except Experience.DoesNotExist:
-            return Response({"error": "Información laboral no encontrada."}, status=status.HTTP_404_NOT_FOUND)
-        
-        experience.save()
-
-        serializer = experienceSerializer(experience)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-class lastExperienceApiView(APIView):
-    def put(self, request, pkid):
-        try:
-            laboral_info = laboralInformation.objects.get(id=pkid)
-        except laboralInformation.DoesNotExist:
-            return Response({"error": "Información laboral no encontrada."}, status=status.HTTP_404_NOT_FOUND)
-        
-        new_experience_data = request.data.get('previousExperiences')
-        if not new_experience_data:
-            return Response({"error": "Datos de experiencia previos no proporcionados."}, status=status.HTTP_400_BAD_REQUEST)
-        
-        new_experience = Experience.objects.create(
-            company=new_experience_data.get('company'),
-            position=new_experience_data.get('position'),
-            description=new_experience_data.get('description')
-        )
-        
-        laboral_info.previousExperiences.add(new_experience)
-        
-        laboral_info.save()
-
-        serializer = laboralInformationSerializer(laboral_info)
-        return Response(serializer.data, status=status.HTTP_200_OK)    
-    
-    
-    
-class AbilityLaboralApiView(APIView):
-    def put(self, request, pkid):
-        try:
-            laboral_info = laboralInformation.objects.get(id=pkid)
-        except laboralInformation.DoesNotExist:
-            return Response({"error": "Información laboral no encontrada."}, status=status.HTTP_404_NOT_FOUND)
-        
-        new_ability= request.data.get('abilities')
-        if not new_ability:
-            return Response({"error": "Datos de experiencia previos no proporcionados."}, status=status.HTTP_400_BAD_REQUEST)
-        
-        laboral_info.abilities.append(new_ability)
-        
-        laboral_info.save()
-
-        serializer = laboralInformationSerializer(laboral_info)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-
-"""  academic """
-class academicInfoUpdateApiView(APIView):
-    def put(self, request, pkid):
-        academic= AcademicInformation.objects.filter(id=pkid).update(
-            educativeInstitution=request.data.get('educativeInstitution'),
-            title=request.data.get('title'),
-            academicDiscipline=request.data.get('academicDiscipline'),
-            startDate=request.data.get('startDate'),
-            endDate=request.data.get('endDate'),
-            description=request.data.get("description")
-        )
-        return Response(academic, status=status.HTTP_200_OK)
-       
-
-
-class newActivityApiView(APIView):
-    def put(self, request, pkid):
-        try:
-            academic_info = AcademicInformation.objects.get(id=pkid)
-        except AcademicInformation.DoesNotExist:
-            return Response({"error": "Información académica no encontrada."}, status=status.HTTP_404_NOT_FOUND)
-        
-        new_activity = request.data.get('aditionalActivities')
-        if not new_activity:
-            return Response({"error": "Datos de experiencia previos no proporcionados."}, status=status.HTTP_400_BAD_REQUEST)
-        
-        academic_info.aditionalActivities.append(new_activity)
-        
-        academic_info.save()
-
-        serializer = academicInformationSerializer(academic_info)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
-class abilityAcademicApiView(APIView):
-    def put(self, request, pkid):
-        try:
-            academic_info = AcademicInformation.objects.get(id=pkid)
-        except AcademicInformation.DoesNotExist:
-            return Response({"error": "Información laboral no encontrada."}, status=status.HTTP_404_NOT_FOUND)
-        
-        new_ability= request.data.get('abilities')
-        if not new_ability:
-            return Response({"error": "Habilidad no proporcionada."}, status=status.HTTP_400_BAD_REQUEST)
-        
-        academic_info.abilities.append(new_ability)
-        
-        academic_info.save()
-
-        serializer = academicInformationSerializer(academic_info)
-        return Response(serializer.data, status=status.HTTP_200_OK)

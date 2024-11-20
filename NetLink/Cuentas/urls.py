@@ -17,11 +17,13 @@ urlpatterns=[
     path('addExperience', experienceApiView.as_view()),
     path('updateExperience/<int:pkid>', experienceApiView.as_view()),
     path('deleteExperience/<int:pkid>', experienceApiView.as_view()),
+    path('laboralInfoUpdate/<int:pkid>', laboralInformationApiView.as_view()),
 
     path('LaboralInfoUpdateApiView/<int:pkid>', laboralInformationApiView.as_view()),
     path('ExpLaboralAPiView/<int:pkid>', ExpLaboralAPiView.as_view()),
     path('lastExperienceApiView/<int:pkid>', lastExperienceApiView.as_view()),
     path('AbilityLaboralApiView/<int:pkid>', AbilityLaboralApiView.as_view()),
+    path('updateExperience/<int:pkid>', experienceApiView.as_view()),
     
 
 
