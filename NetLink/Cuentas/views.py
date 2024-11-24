@@ -275,3 +275,39 @@ class validateApiView(APIView):
         if Usuario.objects.filter(email=data['email'], contrasena=data['contrasena']).exists():
             return Response(True, status=status.HTTP_200_OK) #ver perfil
         return Response(False, status=status.HTTP_400_BAD_REQUEST)
+class academicInfoUpdate(APIView):
+    def put(self, request, pkid, *args, **kwargs):
+        try:
+            academic = AcademicInformation.objects.get(id=pkid)
+        except AcademicInformation.DoesNotExist:
+            return Response({'error': 'Informacion no encontrada.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        abilities = academic.abilities
+        
+        aditionalActivities = academic.aditionalActivities
+        
+        for i in request.data.get('abilities'):
+            abilities.append(i)
+            
+        for i in request.data.get('aditionalActivities'):
+            aditionalActivities.append(i)
+        
+        data = {
+            'educativeInstitution':request.data.get('educativeInstitution'),
+            'title':request.data.get('title'),
+            'academicDiscipline':request.data.get('academicDiscipline'),
+            'startDate':request.data.get('startDate'),
+            'endDate':request.data.get('endDate'),
+            'aditionalActivities': aditionalActivities,
+            'description': request.data.get('description'),
+            'abilities': abilities
+        }
+                
+        serializer = academicInformationSerializer(academic,data=data, partial=True) 
+        
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        print(request.data)
+        print(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
